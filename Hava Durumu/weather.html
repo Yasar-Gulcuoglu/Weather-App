@@ -159,7 +159,7 @@
                 document.querySelector(".sonuc").classList.remove("ilk")
                 let city = document.querySelector("input").value
                 
-                fetch(`http://api.weatherapi.com/v1/current.json?key=7fa086a996cd497e8b4135643233003&q=${city}&lang=tr`).then(responsive=>{ return responsive.json()
+                fetch(`http://api.weatherapi.com/v1/current.json?key={Put-Your-Api-Key-Here}&q=${city}&lang=tr`).then(responsive=>{ return responsive.json()
                 }).then(responsive=>{
                     document.querySelector("#hava").innerHTML = responsive.current.condition.text
                     document.querySelector("#sicaklik").innerHTML = responsive.current.temp_c
