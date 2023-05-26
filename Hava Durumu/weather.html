@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            box-sizing: border-box;
+        }
+        body{
+            height: 100vh;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+
+        }
+        .container{
+            width: 400px;
+            height: 450px;
+            background-color: lightskyblue;
+            border-radius: 10px;
+        }
+        .second{
+            color: white;
+            display: flex;
+            margin-top: 10px;
+            margin-left: 10px;
+
+        }
+        img{
+            width: 25px;
+            height: 25px;
+            margin-right: 10px;
+        }
+        button{
+            background-color: lightskyblue;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .second h1{
+            position: relative;
+            top: 50px;
+            left: 18px;
+            border-bottom: 2px solid white;
+        }
+        .second h3{
+            position: relative;
+            top: 8px;
+        }
+        .sonuc{
+            width: 300px;
+            height: 300px;
+            background-color: white;
+            position: relative;
+            top: 70px;
+            left: 50px;
+            border-radius: 10px;
+            font-size: x-large;
+
+        }
+        .first{
+            display: flex;
+            flex-direction: column;
+            color: white;
+            margin-top: 30px;
+            align-items: center;
+        }
+        input{
+            position: relative;
+            top: 20px;
+            width: 300px;
+            height: 50px;
+            outline: none;
+            border: 0;
+            border-bottom: 2px solid orange;
+            background-color: lightskyblue;
+            color: grey;
+            font-size: x-large;
+            text-align: center;
+            
+        }
+        .first h1{
+            border-bottom: 2px solid white;
+        }
+        .second.ilk{
+            display: none;
+        }
+        .sonuc.ilk{
+            display: none;
+        }
+        .container.ilk{
+            height: 200px;
+        }
+        .first.remove{
+            display: none;
+        }
+        .resim.parcaliBulutlu{
+            background-image: url("parçalı.jpg");
+            background-repeat: no-repeat;
+        }
+        .resim{
+            width: 300px;
+            height: 150px;
+            position: relative;
+            left: 75px;
+        }
+        .resim.bulutlu{
+            background-image: url("bulutlu.png");
+            background-repeat: no-repeat;
+        }
+        .resim.gunesli{
+            background-image: url("gunesli.jpg");
+            background-repeat: no-repeat;
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="container ilk">
+        <div class="first">
+            <h1>Hava Durumu</h1>
+
+            <input type="text" placeholder="Şehir Giriniz">
+
+        </div>
+        <div class="second ilk">
+            <button id="btn"><img src="arrow_back_FILL0_wght400_GRAD0_opsz48.png" alt=""></button>
+            <h3>Ara</h3>
+
+            <h1>Hava Durumu</h1>
+        </div>
+        <div class="sonuc ilk">
+            <div class="resim"></div>
+            <img src="location_on_FILL0_wght400_GRAD0_opsz48.png"style="display: inline-block;margin-left:70px" alt="">
+            <span id="city"style="margin-top:25px;display:inline-block;"></span><br>
+            <img src="bulut.png"style="display: inline-block;margin-left:70px" alt="">
+            <span id="hava"></span><br>
+            <img src="sunny_FILL0_wght400_GRAD0_opsz48.png"style="display: inline-block;margin-left:70px" alt="">
+            <span id="sicaklik"></span>
+            <span >&#176 c</span><br>
+            <img src="air_FILL0_wght400_GRAD0_opsz48.png"style="display: inline-block;margin-left:70px" alt="">
+            <span id="wind"></span>
+            <span >Kph</span><br>
+        </div>
+    </div>
+    <script>
+        document.querySelector("input").addEventListener("keypress",(e)=>{
+            if(e.keyCode == "13"){
+                document.querySelector(".container").classList.remove("ilk")
+                document.querySelector(".first").classList.add("remove")
+                document.querySelector(".second").classList.remove("ilk")
+                document.querySelector(".sonuc").classList.remove("ilk")
+                let city = document.querySelector("input").value
+                
+                fetch(`http://api.weatherapi.com/v1/current.json?key=7fa086a996cd497e8b4135643233003&q=${city}&lang=tr`).then(responsive=>{ return responsive.json()
+                }).then(responsive=>{
+                    document.querySelector("#hava").innerHTML = responsive.current.condition.text
+                    document.querySelector("#sicaklik").innerHTML = responsive.current.temp_c
+                    document.querySelector("#city").innerHTML = responsive.location.name
+                    document.querySelector("#wind").innerHTML = responsive.current.wind_kph
+                    if(responsive.current.condition.text == "Parçalı Bulutlu"){
+                        document.querySelector(".resim").classList.add("parcaliBulutlu")
+                        
+                    }
+                    else if(responsive.current.condition.text == "Çok Bulutlu"){
+                        document.querySelector(".resim").classList.add("bulutlu")
+                    }
+                    else if(responsive.current.condition.text == "Güneşli" || "Açık"){
+                        document.querySelector(".resim").classList.add("gunesli")
+                    }
+                    console.log(responsive)
+                })
+                
+            }
+
+
+        })
+        document.querySelector("#btn").addEventListener("click",()=>{
+
+                document.querySelector(".container").classList.add("ilk")
+                document.querySelector(".first").classList.remove("remove")
+                document.querySelector(".second").classList.add("ilk")
+                document.querySelector(".sonuc").classList.add("ilk")
+		        document.querySelector(".resim").classList.remove("gunesli","bulutlu","parcaliBulutlu")
+
+        })
+    </script>
+</body>
+</html>
